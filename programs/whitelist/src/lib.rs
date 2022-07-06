@@ -15,6 +15,7 @@ pub mod whitelist {
       
 
         //whitelist.counter.checked_add(1).unwrap();
+        //how to access from different function
         Ok(())
     }
 
