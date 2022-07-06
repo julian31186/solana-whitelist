@@ -5,58 +5,36 @@ declare_id!("GAChMFE4jNfB7XXfx6dEoPGWV7UxNRRdxois4FcmBVxe");
 pub mod whitelist {
     use super::*;
 
-    pub fn initialize_whitelist(ctx: Context<InitializeWhitelist>, authority: Pubkey) -> Result<()> {
+    pub fn initialize_whitelist(
+        ctx: Context<InitializeWhitelist>,
+        key: Pubkey,
+    ) -> Result<()> {
         let whitelist = &mut ctx.accounts.whitelisting_account;
+        whitelist.key = key;
         whitelist.counter = 0;
+        whitelist.authority = ctx.accounts.user.key();
         Ok(())
     }
-
-    pub fn add_to_whitelist(ctx: Context<AddWhiteListAddress>, address: Pubkey) -> Result<()> {
-      
-
-        //whitelist.counter.checked_add(1).unwrap();
-        //how to access from different function
-        Ok(())
-    }
-
 }
-
 
 //Data Validators
 #[derive(Accounts)]
-pub struct AddWhiteListAddress<'info> {         
-    #[account(init,seeds=[user.key().as_ref()] , bump, payer = user, space = 8 + 32 + 8)]
-    pub list_account: Account<'info, WhiteListedAccount>,
+#[instruction(key: Pubkey)]
 
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-pub system_program: Program<'info, System>,
-}
-
-
-#[derive(Accounts)]
 pub struct InitializeWhitelist<'info> {
-#[account(init, seeds=[user.key().as_ref()] , bump,  payer = user, space = 8 + 32 + 8)]
+    #[account(init, seeds=[user.key().as_ref(), key.key().as_ref()] , bump,  payer = user, space = 8 + 32 + 8 + 32)]
     pub whitelisting_account: Account<'info, WhiteListingAccount>,
 
     #[account(mut)]
     pub user: Signer<'info>,
 
-pub system_program: Program<'info, System>,
+    pub system_program: Program<'info, System>,
 }
-
-
 
 //Data Structures
-#[account] 
+#[account]
 pub struct WhiteListingAccount {
     pub authority: Pubkey,
+    pub key: Pubkey,
     pub counter: u64,
 }
-
-#[account]
-pub struct WhiteListedAccount {
-    pub address: Pubkey,
-}
-
