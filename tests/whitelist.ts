@@ -9,16 +9,19 @@ describe("whitelist", () => {
   const wallet = provider.wallet;
   const program = anchor.workspace.Whitelist as Program<Whitelist>;
 
-  const key = new PublicKey("BWFYCRtbx3sZjkNoafkVZk49ecMXkQzkA5gC8TGAFYzw");
+  const key = new PublicKey("AHgxu9QXFttqvosvHBTnVRPxK3atU6XVNzcWg6kTBg2y");
+
+  const project = "boardpes";
+  
 
   it("Create Whitelist!", async () => {
     const [whitelist, whitelistBump] =
       await anchor.web3.PublicKey.findProgramAddress(
-        [wallet.publicKey.toBytes(), key.toBuffer()],
+        [wallet.publicKey.toBytes(), key.toBuffer() , Buffer.from(project)],
         program.programId
       );
     const tx = await program.methods
-      .initializeWhitelist(key)
+      .initializeWhitelist(key , project)
       .accounts({
         whitelistingAccount: whitelist,
         user: wallet.publicKey,
@@ -30,7 +33,7 @@ describe("whitelist", () => {
   it("Fetch a Whitelist!", async () => {
         const [whitelist, whitelistBump] =
       await anchor.web3.PublicKey.findProgramAddress(
-        [wallet.publicKey.toBytes(), key.toBuffer()],
+        [wallet.publicKey.toBytes(), key.toBuffer(), Buffer.from(project)],
         program.programId
       );
 

@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-declare_id!("GAChMFE4jNfB7XXfx6dEoPGWV7UxNRRdxois4FcmBVxe");
+declare_id!("9HpLH6sDQNfphnvaoy4KBfmpQyVfcwkvxEYDhriFavJP");
 
 #[program]
 pub mod whitelist {
@@ -8,6 +8,7 @@ pub mod whitelist {
     pub fn initialize_whitelist(
         ctx: Context<InitializeWhitelist>,
         key: Pubkey,
+        _project: String
     ) -> Result<()> {
         let whitelist = &mut ctx.accounts.whitelisting_account;
         whitelist.key = key;
@@ -19,10 +20,11 @@ pub mod whitelist {
 
 //Data Validators
 #[derive(Accounts)]
-#[instruction(key: Pubkey)]
+#[instruction(key: Pubkey , project: String)]
+
 
 pub struct InitializeWhitelist<'info> {
-    #[account(init, seeds=[user.key().as_ref(), key.key().as_ref()] , bump,  payer = user, space = 8 + 32 + 8 + 32)]
+    #[account(init, seeds=[user.key().as_ref(), key.key().as_ref(), project.as_bytes()] , bump,  payer = user, space = 8 + 32 + 8 + 32)]
     pub whitelisting_account: Account<'info, WhiteListingAccount>,
 
     #[account(mut)]
@@ -30,7 +32,7 @@ pub struct InitializeWhitelist<'info> {
 
     pub system_program: Program<'info, System>,
 }
-
+  
 //Data Structures
 #[account]
 pub struct WhiteListingAccount {
