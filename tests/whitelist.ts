@@ -11,7 +11,7 @@ describe("whitelist", () => {
 
   const key = new PublicKey("AHgxu9QXFttqvosvHBTnVRPxK3atU6XVNzcWg6kTBg2y");
 
-  const project = "boardpes";
+  const project = "test project";
   
 
   it("Create Whitelist!", async () => {
